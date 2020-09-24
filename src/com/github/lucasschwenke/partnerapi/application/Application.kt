@@ -8,13 +8,18 @@ import com.github.lucasschwenke.partnerapi.application.modules.repositoriesModul
 import com.github.lucasschwenke.partnerapi.application.modules.servicesModules
 import com.github.lucasschwenke.partnerapi.application.web.controllers.PartnerController
 import com.github.lucasschwenke.partnerapi.application.web.requests.PartnerRequest
+import com.github.lucasschwenke.partnerapi.domain.exceptions.ApiException
 import io.ktor.application.Application
 import io.ktor.application.call
 import io.ktor.application.install
+import io.ktor.application.log
 import io.ktor.features.ContentNegotiation
 import io.ktor.features.StatusPages
+import io.ktor.http.HttpStatusCode
 import io.ktor.jackson.jackson
+import io.ktor.request.httpMethod
 import io.ktor.request.receive
+import io.ktor.request.uri
 import io.ktor.response.respond
 import io.ktor.routing.get
 import io.ktor.routing.post
@@ -48,8 +53,27 @@ fun Application.module(testing: Boolean = false) {
         }
 
         install(StatusPages) {
+            exception<ApiException> { cause ->
+                log.error(
+                    "Error while was processing the request: ${this.context.request.httpMethod.value} - " +
+                        "${this.context.request.uri}: ${cause.userResponseMessage()}. Status: ${cause.httpStatus()}"
+                )
 
+                val httpStatusCode = HttpStatusCode(cause.httpStatus(), cause.apiError().name)
+                call.respond(
+                    status = httpStatusCode,
+                    message = cause.createErrorResponse()
+                )
+            }
+
+            exception<Exception> {
+                call.respond(
+                    status = HttpStatusCode.InternalServerError,
+                    message = "An error occurred."
+                )
+            }
         }
+
     }
 
     val partnerController: PartnerController by inject()

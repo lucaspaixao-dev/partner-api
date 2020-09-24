@@ -58,8 +58,7 @@ class PartnerRepositoryDb(
         logger.debug("Searching partner by id $id").let {
             BasicDBObject(mutableMapOf("id" to id).toMap())
         }.let {
-            collection.find(it)
-                .projection(Projections.excludeId())
+            collection.find(it).projection(Projections.excludeId())
                 .firstOrNull()?.let { document ->
                     val jsonResult = document.toJson()
                     logger.debug("Has found the follow partner with the id $id: $jsonResult")
@@ -67,7 +66,7 @@ class PartnerRepositoryDb(
                 }
         }
 
-    override fun findNearest(latitude: Double, longitude: Double): Partner? =
+    override fun findNearestPartner(latitude: Double, longitude: Double): Partner? =
         collection.aggregate(
             listOf(
                 BsonDocument(

@@ -6,5 +6,5 @@ interface PartnerRepository {
 
     fun insert(partner: Partner): Partner
     fun findById(id: String): Partner?
-    fun findNearest(latitude: Double, longitude: Double): Partner?
+    fun findNearestPartner(latitude: Double, longitude: Double): Partner?
 }

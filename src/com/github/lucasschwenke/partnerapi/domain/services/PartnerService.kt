@@ -1,5 +1,6 @@
 package com.github.lucasschwenke.partnerapi.domain.services
 
+import com.github.lucasschwenke.partnerapi.domain.exceptions.PartnerNotFoundException
 import com.github.lucasschwenke.partnerapi.domain.logger.LoggableClass
 import com.github.lucasschwenke.partnerapi.domain.partner.Partner
 import com.github.lucasschwenke.partnerapi.domain.repositories.PartnerRepository
@@ -13,12 +14,12 @@ class PartnerService(
     }
 
     fun findBydId(id: String): Partner =
-        partnerRepository.findById(id) ?: throw RuntimeException("The partner with the id $id does not exists.")
+        partnerRepository.findById(id) ?: throw PartnerNotFoundException("The partner with the id $id does not exists.")
 
-    fun findNearest(latitude: Double, longitude: Double): Partner {
-        return partnerRepository.findNearest(latitude, longitude) ?:
-            throw RuntimeException("Test")
-    }
+    fun findNearestPartner(latitude: Double, longitude: Double): Partner =
+        partnerRepository.findNearestPartner(latitude, longitude)
+            ?: throw PartnerNotFoundException(
+                "There is not any partner that covers the area of the latitude and longitude informed.")
 
     companion object: LoggableClass()
 }
