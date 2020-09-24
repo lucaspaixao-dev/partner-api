@@ -38,6 +38,22 @@ class PartnerController(
         }
     }
 
+    fun findNearest(call: ApplicationCall): PartnerResponse {
+        val latitude = call.request.queryParameters["latitude"]?.toDouble()
+            ?: throw RuntimeException("The latitude does not informed.")
+
+        val longitude = call.request.queryParameters["latitude"]?.toDouble()
+            ?: throw RuntimeException("The latitude does not informed.")
+
+        return PartnerResponse(partnerService.findNearest(latitude, longitude)).also {
+            call.response.status(HttpStatusCode.OK)
+            logger.debug(
+                "Replying ${HttpStatusCode.OK} with the follow json response " +
+                        "${getJsonString(it)} in findNearest endpoint."
+            )
+        }
+    }
+
     private fun getJsonString(any: Any): String = objectMapper.writeValueAsString(any)
 
     companion object: LoggableClass()

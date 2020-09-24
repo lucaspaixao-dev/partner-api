@@ -56,14 +56,16 @@ fun Application.module(testing: Boolean = false) {
 
     routing {
         route("/partner") {
-            get("/{id}") {
-                call.respond(partnerController.findById(this.call))
+            get {
+                call.respond(partnerController.findNearest(this.call))
             }
-
             post {
                 this.call.receive<PartnerRequest>().let {
                     call.respond(partnerController.createPartner(it, this.call))
                 }
+            }
+            get("/{id}") {
+                call.respond(partnerController.findById(this.call))
             }
         }
     }

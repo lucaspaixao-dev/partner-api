@@ -10,9 +10,9 @@ import com.github.lucasschwenke.partnerapi.resources.repositories.extensions.toM
 import com.mongodb.BasicDBObject
 import com.mongodb.MongoClient
 import com.mongodb.client.MongoCollection
+import com.mongodb.client.model.Indexes
 import com.mongodb.client.model.Projections
 import io.azam.ulidj.ULID
-import org.bson.conversions.Bson
 import org.bson.Document as BsonDocument
 
 class PartnerRepositoryDb(
@@ -26,6 +26,7 @@ class PartnerRepositoryDb(
     init {
         val db = client.getDatabase(database)
         collection = db.getCollection("partner")
+        collection.createIndex(Indexes.geo2dsphere("address"))
 
         logger.debug("Connect in database $database on collection $collection")
     }
@@ -64,6 +65,39 @@ class PartnerRepositoryDb(
                     logger.debug("Has found the follow partner with the id $id: $jsonResult")
                     objectMapper.readValue<PartnerEntity>(jsonResult).toModel()
                 }
+        }
+
+    override fun findNearest(latitude: Double, longitude: Double): Partner? =
+        collection.aggregate(
+            listOf(
+                BsonDocument(
+                    "\$geoNear",
+                    BsonDocument(
+                        "near",
+                        BsonDocument("type", "Point").append("coordinates", listOf(latitude, longitude))
+                    ).append("distanceField", "partner.calculated").append(
+                        "query",
+                        BsonDocument(
+                            "coverage_area",
+                            BsonDocument(
+                                "\$geoIntersects",
+                                BsonDocument(
+                                    "\$geometry",
+                                    BsonDocument("type", "Point")
+                                        .append("coordinates", listOf(latitude, longitude))
+                                )
+                            )
+                        )
+                    ).append("spherical", true)
+                )
+            )
+        ).firstOrNull()?.let { document ->
+            val jsonResult = document.toJson()
+            objectMapper.readValue<PartnerEntity>(jsonResult).toModel().also {
+                logger.debug(
+                    "Has found the follow partner nearest to latitude $latitude and longitude $longitude: ${it.ownerName}"
+                )
+            }
         }
 
     companion object: LoggableClass()

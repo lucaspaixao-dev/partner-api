@@ -15,5 +15,10 @@ class PartnerService(
     fun findBydId(id: String): Partner =
         partnerRepository.findById(id) ?: throw RuntimeException("The partner with the id $id does not exists.")
 
+    fun findNearest(latitude: Double, longitude: Double): Partner {
+        return partnerRepository.findNearest(latitude, longitude) ?:
+            throw RuntimeException("Test")
+    }
+
     companion object: LoggableClass()
 }
