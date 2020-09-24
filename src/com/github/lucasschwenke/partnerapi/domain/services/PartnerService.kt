@@ -12,5 +12,8 @@ class PartnerService(
         return partnerRepository.insert(partner)
     }
 
+    fun findBydId(id: String): Partner =
+        partnerRepository.findById(id) ?: throw RuntimeException("The partner with the id $id does not exists.")
+
     companion object: LoggableClass()
 }

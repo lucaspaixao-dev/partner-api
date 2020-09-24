@@ -1,13 +1,18 @@
 package com.github.lucasschwenke.partnerapi.resources.repositories
 
 import com.fasterxml.jackson.databind.ObjectMapper
+import com.fasterxml.jackson.module.kotlin.readValue
 import com.github.lucasschwenke.partnerapi.domain.logger.LoggableClass
 import com.github.lucasschwenke.partnerapi.domain.partner.Partner
 import com.github.lucasschwenke.partnerapi.domain.repositories.PartnerRepository
 import com.github.lucasschwenke.partnerapi.resources.repositories.entities.PartnerEntity
+import com.github.lucasschwenke.partnerapi.resources.repositories.extensions.toModel
+import com.mongodb.BasicDBObject
 import com.mongodb.MongoClient
 import com.mongodb.client.MongoCollection
+import com.mongodb.client.model.Projections
 import io.azam.ulidj.ULID
+import org.bson.conversions.Bson
 import org.bson.Document as BsonDocument
 
 class PartnerRepositoryDb(
@@ -47,6 +52,19 @@ class PartnerRepositoryDb(
             logger.debug("Partner has been created with id $id")
         }
     }
+
+    override fun findById(id: String): Partner? =
+        logger.debug("Searching partner by id $id").let {
+            BasicDBObject(mutableMapOf("id" to id).toMap())
+        }.let {
+            collection.find(it)
+                .projection(Projections.excludeId())
+                .firstOrNull()?.let { document ->
+                    val jsonResult = document.toJson()
+                    logger.debug("Has found the follow partner with the id $id: $jsonResult")
+                    objectMapper.readValue<PartnerEntity>(jsonResult).toModel()
+                }
+        }
 
     companion object: LoggableClass()
 }

@@ -7,7 +7,8 @@ import org.koin.dsl.module
 val controllersModules: Module = module {
     single {
         PartnerController(
-            partnerService = get()
+            partnerService = get(),
+            objectMapper = get()
         )
     }
 }
