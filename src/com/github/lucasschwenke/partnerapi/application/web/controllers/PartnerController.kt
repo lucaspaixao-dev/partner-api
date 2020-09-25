@@ -1,6 +1,7 @@
 package com.github.lucasschwenke.partnerapi.application.web.controllers
 
 import com.fasterxml.jackson.databind.ObjectMapper
+import com.github.lucasschwenke.partnerapi.application.web.extensions.onlyNumbersAndLetters
 import com.github.lucasschwenke.partnerapi.application.web.extensions.toModel
 import com.github.lucasschwenke.partnerapi.application.web.requests.PartnerRequest
 import com.github.lucasschwenke.partnerapi.application.web.responses.PartnerResponse
@@ -22,7 +23,8 @@ class PartnerController(
         logger.debug(
             "A new request to create a new partner has been received: ${getJsonString(partnerRequest)}"
         ).let {
-            val errors = partnerValidator.validate(partnerRequest)
+            val partner = partnerRequest.copy(document = partnerRequest.document.onlyNumbersAndLetters())
+            val errors = partnerValidator.validate(partner)
 
             if (errors.isNotEmpty()) {
                 logger.error("There are some invalids fields in request.")
@@ -33,7 +35,7 @@ class PartnerController(
                 )
             }
 
-            PartnerResponse(partnerService.create(partnerRequest.toModel()))
+            PartnerResponse(partnerService.create(partner.toModel()))
         }.also {
             call.response.status(HttpStatusCode.Created)
             logger.debug(
@@ -54,14 +56,14 @@ class PartnerController(
         }
     }
 
-    fun findNearest(call: ApplicationCall): PartnerResponse {
+    fun findByLatitudeAndLongitude(call: ApplicationCall): PartnerResponse {
         val latitude = call.request.queryParameters["latitude"]?.toDouble()
             ?: throw InvalidParameterException("The query parameter latitude does not informed.")
 
         val longitude = call.request.queryParameters["longitude"]?.toDouble()
             ?: throw InvalidParameterException("The query parameter longitude does not informed.")
 
-        return PartnerResponse(partnerService.findNearestPartner(latitude, longitude)).also {
+        return PartnerResponse(partnerService.findByLatitudeAndLongitude(latitude, longitude)).also {
             call.response.status(HttpStatusCode.OK)
             logger.debug(
                 "Replying ${HttpStatusCode.OK} with the follow json response " +
@@ -72,5 +74,5 @@ class PartnerController(
 
     private fun getJsonString(any: Any): String = objectMapper.writeValueAsString(any)
 
-    companion object: LoggableClass()
+    companion object : LoggableClass()
 }

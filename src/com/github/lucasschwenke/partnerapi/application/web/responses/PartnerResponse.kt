@@ -13,7 +13,7 @@ data class PartnerResponse(
     val address: Point
 ) {
 
-    constructor(partner: Partner): this(
+    constructor(partner: Partner) : this(
         id = partner.id!!,
         tradingName = partner.tradingName,
         ownerName = partner.ownerName,

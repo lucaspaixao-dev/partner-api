@@ -2,7 +2,7 @@ package com.github.lucasschwenke.partnerapi.application.web.validations
 
 import com.github.lucasschwenke.partnerapi.application.web.requests.PartnerRequest
 
-class PartnerValidator: Validator {
+class PartnerValidator : Validator {
 
     override fun validate(partnerRequest: PartnerRequest): Map<String, List<String>> {
         val errorList = mutableListOf<Validation<*>>()

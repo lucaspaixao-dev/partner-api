@@ -75,7 +75,6 @@ fun Application.module(testing: Boolean = false) {
                 )
             }
         }
-
     }
 
     val partnerController: PartnerController by inject()
@@ -83,7 +82,7 @@ fun Application.module(testing: Boolean = false) {
     routing {
         route("/partner") {
             get {
-                call.respond(partnerController.findNearest(this.call))
+                call.respond(partnerController.findByLatitudeAndLongitude(this.call))
             }
             post {
                 this.call.receive<PartnerRequest>().let {
@@ -96,4 +95,3 @@ fun Application.module(testing: Boolean = false) {
         }
     }
 }
-

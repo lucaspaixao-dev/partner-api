@@ -8,12 +8,14 @@ buildscript {
     
     dependencies {
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
+        classpath "org.jlleitschuh.gradle:ktlint-gradle:9.2.1"
         classpath "io.gitlab.arturbosch.detekt:detekt-gradle-plugin:1.9.1"
     }
 }
 
 apply plugin: 'kotlin'
 apply plugin: 'application'
+apply plugin: 'org.jlleitschuh.gradle.ktlint'
 apply plugin: 'io.gitlab.arturbosch.detekt'
 
 group 'com.github.lucasschwenke'
@@ -84,10 +86,33 @@ detekt {
     }
 }
 
+tasks.detekt.dependsOn ktlintCheck
+
+ktlint {
+    verbose = true
+}
+
+test.dependsOn ktlintCheck
+
 compileKotlin {
     kotlinOptions.jvmTarget = "1.8"
 }
 
 compileTestKotlin {
     kotlinOptions.jvmTarget = "1.8"
+}
+
+test {
+    useJUnitPlatform()
+
+    filter {
+        includeTestsMatching "com.github.lucasschwenke.partnerapi.*"
+    }
+
+    testLogging {
+        events "failed", "passed", "skipped"
+        showExceptions = true
+        exceptionFormat = "full"
+        showCauses = true
+    }
 }

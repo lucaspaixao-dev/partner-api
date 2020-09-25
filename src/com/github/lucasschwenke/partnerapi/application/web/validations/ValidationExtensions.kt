@@ -21,10 +21,8 @@ fun <T> Validation<T>.isNull(): Validation<T> {
 
 fun Validation<String>.isInvalidCNPJ(): Validation<String> {
     try {
-        val regex = Regex("[^A-Za-z0-9 ]")
-        val cnpj = regex.replace(this.fieldValue, "")
         val validator = CNPJValidator(false)
-        validator.assertValid(cnpj)
+        validator.assertValid(this.fieldValue)
     } catch (e: InvalidStateException) {
         errorMessageList.add("the CNPJ is invalid.")
     }
