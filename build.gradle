@@ -15,6 +15,7 @@ buildscript {
 
 apply plugin: 'kotlin'
 apply plugin: 'application'
+apply plugin: 'jacoco'
 apply plugin: 'org.jlleitschuh.gradle.ktlint'
 apply plugin: 'io.gitlab.arturbosch.detekt'
 
@@ -74,6 +75,14 @@ dependencies {
     detektPlugins "io.gitlab.arturbosch.detekt:detekt-cli:1.9.1"
 }
 
+compileKotlin {
+    kotlinOptions.jvmTarget = "1.8"
+}
+
+compileTestKotlin {
+    kotlinOptions.jvmTarget = "1.8"
+}
+
 detekt {
     failFast = true
     buildUponDefaultConfig = true
@@ -94,13 +103,55 @@ ktlint {
 
 test.dependsOn ktlintCheck
 
-compileKotlin {
-    kotlinOptions.jvmTarget = "1.8"
+def ignorePackagesInJacocoReport = { classDirectories ->
+    files(classDirectories.files.collect {
+        fileTree(dir: it,
+                exclude: [
+                        'com/github/lucasschwenke/partnerapi/application/Application**',
+                        'com/github/lucasschwenke/partnerapi/application/config/**',
+                        'com/github/lucasschwenke/partnerapi/application/modules/**',
+                        'com/github/lucasschwenke/partnerapi/application/web/controllers/**',
+                        'com/github/lucasschwenke/partnerapi/application/web/extensions/PartnerRequestExtension**',
+                        'com/github/lucasschwenke/partnerapi/application/web/requests/**',
+                        'com/github/lucasschwenke/partnerapi/application/web/responses/**',
+                        'com/github/lucasschwenke/partnerapi/application/web/validations/**',
+                        'com/github/lucasschwenke/partnerapi/domain/exception/**',
+                        'com/github/lucasschwenke/partnerapi/domain/logger/**',
+                        'com/github/lucasschwenke/partnerapi/domain/partner/**',
+                        'com/github/lucasschwenke/partnerapi/domain/repositories/**',
+                        'com/github/lucasschwenke/partnerapi/resources/**',
+                ])
+    })
 }
 
-compileTestKotlin {
-    kotlinOptions.jvmTarget = "1.8"
+jacoco {
+    toolVersion = "0.8.4"
 }
+
+jacocoTestCoverageVerification {
+    violationRules {
+        rule {
+            limit {
+                minimum = 0.80
+            }
+        }
+    }
+
+    afterEvaluate {
+        classDirectories = ignorePackagesInJacocoReport(classDirectories)
+    }
+}
+
+jacocoTestReport {
+    reports.xml.enabled = true
+
+    afterEvaluate {
+        classDirectories = ignorePackagesInJacocoReport(classDirectories)
+    }
+}
+
+test.finalizedBy jacocoTestReport
+test.finalizedBy jacocoTestCoverageVerification
 
 test {
     useJUnitPlatform()

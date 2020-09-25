@@ -3,8 +3,7 @@ package com.github.lucasschwenke.partnerapi.domain.exceptions
 import java.lang.Exception
 
 abstract class ApiException(
-    message: String,
-    details: Map<String, List<Any>> = emptyMap()
+    message: String
 ) : Exception(message) {
 
     abstract fun httpStatus(): Int

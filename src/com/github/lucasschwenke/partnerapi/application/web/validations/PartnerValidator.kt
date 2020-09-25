@@ -1,5 +1,8 @@
 package com.github.lucasschwenke.partnerapi.application.web.validations
 
+import com.github.lucasschwenke.partnerapi.application.web.extensions.isInvalidCNPJ
+import com.github.lucasschwenke.partnerapi.application.web.extensions.isNull
+import com.github.lucasschwenke.partnerapi.application.web.extensions.isNullOrBlank
 import com.github.lucasschwenke.partnerapi.application.web.requests.PartnerRequest
 
 class PartnerValidator : Validator {

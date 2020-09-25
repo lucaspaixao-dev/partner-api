@@ -1,7 +1,8 @@
-package com.github.lucasschwenke.partnerapi.application.web.validations
+package com.github.lucasschwenke.partnerapi.application.web.extensions
 
 import br.com.caelum.stella.validation.CNPJValidator
 import br.com.caelum.stella.validation.InvalidStateException
+import com.github.lucasschwenke.partnerapi.application.web.validations.Validation
 
 fun Validation<String>.isNullOrBlank(): Validation<String> {
     this.fieldValue.takeIf { it.isBlank() }?.run {
