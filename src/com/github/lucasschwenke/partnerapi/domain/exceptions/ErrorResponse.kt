@@ -4,5 +4,6 @@ import com.fasterxml.jackson.annotation.JsonProperty
 
 data class ErrorResponse(
     @JsonProperty("api_error") val apiError: ApiError,
-    @JsonProperty("message") val message: String
+    @JsonProperty("message") val message: String,
+    @JsonProperty("details") val details: Map<String, List<Any>>
 )

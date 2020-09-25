@@ -6,6 +6,7 @@ import com.github.lucasschwenke.partnerapi.application.modules.controllersModule
 import com.github.lucasschwenke.partnerapi.application.modules.databaseModule
 import com.github.lucasschwenke.partnerapi.application.modules.repositoriesModules
 import com.github.lucasschwenke.partnerapi.application.modules.servicesModules
+import com.github.lucasschwenke.partnerapi.application.modules.validatorsModules
 import com.github.lucasschwenke.partnerapi.application.web.controllers.PartnerController
 import com.github.lucasschwenke.partnerapi.application.web.requests.PartnerRequest
 import com.github.lucasschwenke.partnerapi.domain.exceptions.ApiException
@@ -44,6 +45,7 @@ fun Application.module(testing: Boolean = false) {
             modules(
                 listOf(
                     applicationModules,
+                    validatorsModules,
                     databaseModule,
                     repositoriesModules,
                     servicesModules,

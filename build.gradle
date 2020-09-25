@@ -8,11 +8,13 @@ buildscript {
     
     dependencies {
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
+        classpath "io.gitlab.arturbosch.detekt:detekt-gradle-plugin:1.9.1"
     }
 }
 
 apply plugin: 'kotlin'
 apply plugin: 'application'
+apply plugin: 'io.gitlab.arturbosch.detekt'
 
 group 'com.github.lucasschwenke'
 version '1.0.0'
@@ -47,7 +49,10 @@ dependencies {
     implementation "de.grundid.opendatalab:geojson-jackson:1.14"
 
     //ulid
-    compile "io.azam.ulidj:ulidj:1.0.0"
+    implementation "io.azam.ulidj:ulidj:1.0.0"
+
+    //validations
+    implementation "br.com.caelum.stella:caelum-stella-core:2.1.4"
 
     //tests
     testImplementation "io.ktor:ktor-server-tests:$ktor_version"
@@ -61,4 +66,28 @@ dependencies {
 
     testCompile "de.bwaldvogel:mongo-java-server:1.35.0"
     testCompile "org.skyscreamer:jsonassert:1.5.0"
+
+    //detekt
+    detektPlugins "io.gitlab.arturbosch.detekt:detekt-formatting:1.9.1"
+    detektPlugins "io.gitlab.arturbosch.detekt:detekt-cli:1.9.1"
+}
+
+detekt {
+    failFast = true
+    buildUponDefaultConfig = true
+    config = files("default-detekt-config.yml")
+
+    reports {
+        html.enabled = true
+        xml.enabled = true
+        txt.enabled = true
+    }
+}
+
+compileKotlin {
+    kotlinOptions.jvmTarget = "1.8"
+}
+
+compileTestKotlin {
+    kotlinOptions.jvmTarget = "1.8"
 }

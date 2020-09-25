@@ -8,7 +8,8 @@ val controllersModules: Module = module {
     single {
         PartnerController(
             partnerService = get(),
-            objectMapper = get()
+            objectMapper = get(),
+            partnerValidator = get()
         )
     }
 }

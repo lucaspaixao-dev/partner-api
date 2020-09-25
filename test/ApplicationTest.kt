@@ -1,6 +1,6 @@
 package com.github.lucasschwenke
 
-import io.ktor.application.*
+/*import io.ktor.application.*
 import io.ktor.response.*
 import io.ktor.request.*
 import io.ktor.features.*
@@ -21,4 +21,4 @@ class ApplicationTest {
             }
         }
     }
-}
+}*/
