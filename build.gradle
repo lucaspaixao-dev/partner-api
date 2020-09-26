@@ -166,3 +166,29 @@ test {
         showCauses = true
     }
 }
+
+task componentTest(type: Test) {
+    useJUnitPlatform()
+    maxHeapSize "512m"
+    failFast = true
+
+    environment "MONGO_HOST", "TEST"
+    environment "MONGO_AUTH_USER", "TEST"
+    environment "MONGO_DATABASE", "TEST"
+    environment "MONGO_AUTH_PASSWORD", 1234
+
+    filter {
+        includeTestsMatching "componentTests.*"
+    }
+
+    testLogging {
+        events "failed", "passed", "skipped"
+        showExceptions = true
+        exceptionFormat = "full"
+        showCauses = true
+    }
+
+    mustRunAfter test
+}
+
+test.finalizedBy componentTest
