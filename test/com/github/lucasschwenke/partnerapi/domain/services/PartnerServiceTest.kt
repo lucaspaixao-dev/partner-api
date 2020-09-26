@@ -71,7 +71,7 @@ class PartnerServiceTest {
         every { partnerRepositoryMock.findById(id) } returns null
 
         assertThrows<PartnerNotFoundException>(
-            message = "The partner with the id $id does not exists."
+            message = "The partner with the id $id not found."
         ) {
             partnerService.findBydId(id)
         }

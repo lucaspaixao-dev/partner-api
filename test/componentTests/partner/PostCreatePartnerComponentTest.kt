@@ -1,8 +1,6 @@
 package componentTests.partner
 
-import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.module.kotlin.readValue
-import com.github.lucasschwenke.partnerapi.application.config.configureObjectMapper
 import com.github.lucasschwenke.partnerapi.application.module
 import com.github.lucasschwenke.partnerapi.application.web.responses.PartnerResponse
 import componentTests.ComponentTest
@@ -22,8 +20,6 @@ import org.skyscreamer.jsonassert.JSONCompareMode
 
 @KtorExperimentalAPI
 class PostCreatePartnerComponentTest : ComponentTest() {
-
-    private val objectMapper: ObjectMapper = configureObjectMapper()
 
     @Test
     fun `should return 201 status code when the partner was created`() {

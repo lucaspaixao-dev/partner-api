@@ -1,6 +1,8 @@
 package componentTests
 
+import com.fasterxml.jackson.databind.ObjectMapper
 import com.github.lucasschwenke.partnerapi.application.config.DatabaseConfig
+import com.github.lucasschwenke.partnerapi.application.config.configureObjectMapper
 import com.mongodb.BasicDBObject
 import com.mongodb.MongoClient
 import com.mongodb.ServerAddress
@@ -20,6 +22,7 @@ abstract class ComponentTest : BeforeEachCallback, AfterEachCallback {
 
     private val server: MongoServer = MongoServer(MemoryBackend())
     private val client: MongoClient = MongoClient(ServerAddress(server.bind()))
+    protected val objectMapper: ObjectMapper = configureObjectMapper()
 
     private val databaseConfig = mockk<DatabaseConfig>(relaxed = true)
 

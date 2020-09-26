@@ -1,0 +1,5 @@
+{
+  "api_error": "PARTNER_NOT_FOUND",
+  "message": "The partner with the id asdasd not found.",
+  "details": {}
+}

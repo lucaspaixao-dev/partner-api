@@ -21,7 +21,7 @@ class PartnerService(
     }
 
     fun findBydId(id: String): Partner =
-        partnerRepository.findById(id) ?: throw PartnerNotFoundException("The partner with the id $id does not exists.")
+        partnerRepository.findById(id) ?: throw PartnerNotFoundException("The partner with the id $id not found.")
 
     fun findByLatitudeAndLongitude(latitude: Double, longitude: Double): Partner =
         partnerRepository.findByLatitudeAndLongitude(latitude, longitude)
