@@ -2,7 +2,6 @@ package com.github.lucasschwenke.partnerapi.domain.services
 
 import com.github.lucasschwenke.partnerapi.domain.exceptions.PartnerAlreadyRegisteredException
 import com.github.lucasschwenke.partnerapi.domain.exceptions.PartnerNotFoundException
-import com.github.lucasschwenke.partnerapi.domain.logger.LoggableClass
 import com.github.lucasschwenke.partnerapi.domain.partner.Partner
 import com.github.lucasschwenke.partnerapi.domain.repositories.PartnerRepository
 
@@ -28,6 +27,4 @@ class PartnerService(
             ?: throw PartnerNotFoundException(
                 "There is not any partner that covers the area of the latitude and longitude informed."
             )
-
-    companion object : LoggableClass()
 }

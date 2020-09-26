@@ -39,8 +39,7 @@ class PartnerController(
         }.also {
             call.response.status(HttpStatusCode.Created)
             logger.debug(
-                "Replying ${HttpStatusCode.Created.value} with the follow json response " +
-                        "${getJsonString(it)} in createPartner endpoint."
+                "Replying ${HttpStatusCode.Created.value} with the follow json response ${getJsonString(it)} in createPartner endpoint."
             )
         }
 
@@ -66,8 +65,7 @@ class PartnerController(
         return PartnerResponse(partnerService.findByLatitudeAndLongitude(latitude, longitude)).also {
             call.response.status(HttpStatusCode.OK)
             logger.debug(
-                "Replying ${HttpStatusCode.OK} with the follow json response " +
-                        "${getJsonString(it)} in findNearest endpoint."
+                "Replying ${HttpStatusCode.OK} with the follow json response ${getJsonString(it)} in findNearest endpoint."
             )
         }
     }

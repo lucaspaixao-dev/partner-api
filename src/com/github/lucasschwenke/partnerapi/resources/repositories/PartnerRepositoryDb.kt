@@ -58,24 +58,22 @@ class PartnerRepositoryDb(
         logger.debug("Searching partner by id $id").run {
             BasicDBObject(mutableMapOf("id" to id).toMap())
         }.let {
-            collection.find(it).projection(Projections.excludeId())
-                .firstOrNull()?.let { document ->
-                    val jsonResult = document.toJson()
-                    logger.debug("Has found the follow partner with the id $id: $jsonResult")
-                    objectMapper.readValue<PartnerEntity>(jsonResult).toModel()
-                }
+            collection.find(it).projection(Projections.excludeId()).firstOrNull()?.let { document ->
+                val jsonResult = document.toJson()
+                logger.debug("Has found the follow partner with the id $id: $jsonResult")
+                objectMapper.readValue<PartnerEntity>(jsonResult).toModel()
+            }
         }
 
     override fun findByDocument(document: String): Partner? =
         logger.debug("Searching partner by document $document").run {
             BasicDBObject(mutableMapOf("document" to document).toMap())
         }.let {
-            collection.find(it).projection(Projections.excludeId())
-                .firstOrNull()?.let { document ->
-                    val jsonResult = document.toJson()
-                    logger.debug("Has found the follow partner with the document $document: $jsonResult")
-                    objectMapper.readValue<PartnerEntity>(jsonResult).toModel()
-                }
+            collection.find(it).projection(Projections.excludeId()).firstOrNull()?.let { document ->
+                val jsonResult = document.toJson()
+                logger.debug("Has found the follow partner with the document $document: $jsonResult")
+                objectMapper.readValue<PartnerEntity>(jsonResult).toModel()
+            }
         }
 
     override fun findByLatitudeAndLongitude(latitude: Double, longitude: Double): Partner? =
