@@ -4,6 +4,4 @@ import componentTests.ComponentTest
 import io.ktor.util.KtorExperimentalAPI
 
 @KtorExperimentalAPI
-class GetPartnerByLatitudeAndLongitudeComponentTest : ComponentTest() {
-
-}
+class GetPartnerByLatitudeAndLongitudeComponentTest : ComponentTest()

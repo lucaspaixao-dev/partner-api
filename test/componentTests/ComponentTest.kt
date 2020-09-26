@@ -16,7 +16,7 @@ import org.koin.core.module.Module
 import org.koin.dsl.module
 
 @KtorExperimentalAPI
-abstract class ComponentTest: BeforeEachCallback, AfterEachCallback {
+abstract class ComponentTest : BeforeEachCallback, AfterEachCallback {
 
     private val server: MongoServer = MongoServer(MemoryBackend())
     private val client: MongoClient = MongoClient(ServerAddress(server.bind()))

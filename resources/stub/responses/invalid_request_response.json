@@ -1,0 +1,9 @@
+{
+  "api_error": "INVALID_REQUEST",
+  "message": "The follow fields are invalids:",
+  "details": {
+    "owner_name": [
+      "must not be empty or null."
+    ]
+  }
+}

@@ -4,7 +4,4 @@ import componentTests.ComponentTest
 import io.ktor.util.KtorExperimentalAPI
 
 @KtorExperimentalAPI
-class GetPartnerByIdComponentTest : ComponentTest() {
-
-
-}
+class GetPartnerByIdComponentTest : ComponentTest()
