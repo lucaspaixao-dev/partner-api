@@ -27,6 +27,7 @@ import io.ktor.routing.post
 import io.ktor.routing.route
 import io.ktor.routing.routing
 import io.ktor.util.KtorExperimentalAPI
+import org.koin.core.module.Module
 import org.koin.ktor.ext.Koin
 import org.koin.ktor.ext.inject
 
@@ -35,7 +36,7 @@ fun main(args: Array<String>): Unit = io.ktor.server.netty.EngineMain.main(args)
 @KtorExperimentalAPI
 @Suppress("unused") // Referenced in application.conf
 @kotlin.jvm.JvmOverloads
-fun Application.module(testing: Boolean = false) {
+fun Application.module(dbTestModule: Module? = null) {
     install(ContentNegotiation) {
         jackson {
             configureObjectMapper()
@@ -46,7 +47,7 @@ fun Application.module(testing: Boolean = false) {
                 listOf(
                     applicationModules,
                     validatorsModules,
-                    databaseModule,
+                    dbTestModule ?: databaseModule,
                     repositoriesModules,
                     servicesModules,
                     controllersModules
