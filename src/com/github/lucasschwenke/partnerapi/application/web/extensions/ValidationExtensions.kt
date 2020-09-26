@@ -13,7 +13,7 @@ fun Validation<String>.isNullOrBlank(): Validation<String> {
 }
 
 fun <T> Validation<T>.isNull(): Validation<T> {
-    this.fieldValue.takeIf { it == null }?.run {
+    if (this.fieldValue == null) {
         errorMessageList.add("must not be null.")
     }
 

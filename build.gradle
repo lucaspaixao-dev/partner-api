@@ -110,7 +110,6 @@ def ignorePackagesInJacocoReport = { classDirectories ->
                         'com/github/lucasschwenke/partnerapi/application/Application**',
                         'com/github/lucasschwenke/partnerapi/application/config/**',
                         'com/github/lucasschwenke/partnerapi/application/modules/**',
-                        'com/github/lucasschwenke/partnerapi/application/web/controllers/**',
                         'com/github/lucasschwenke/partnerapi/application/web/extensions/PartnerRequestExtension**',
                         'com/github/lucasschwenke/partnerapi/application/web/requests/**',
                         'com/github/lucasschwenke/partnerapi/application/web/responses/**',
