@@ -150,31 +150,38 @@ class PartnerControllerTest {
     }
 
     @Test
-    fun `should thrown an exception when the query parameter latitude has been not informed on request`() {
-        every { applicationCallMock.request.queryParameters["latitude"] } returns null
+    fun `should not thrown an exception when the query parameter latitude has been not informed on request`() {
+        val longitude = "11.22"
 
-        assertThrows<InvalidParameterException>(
-            message = "The query parameter latitude does not informed."
-        ) {
+        every { applicationCallMock.request.queryParameters["latitude"] } returns null
+        every { applicationCallMock.request.queryParameters["longitude"] } returns longitude
+        every { partnerServiceMock.findByLatitudeAndLongitude(0.0, 11.22) } returns partnerMock
+
+        assertDoesNotThrow {
             partnerController.findByLatitudeAndLongitude(applicationCallMock)
         }
 
-        verify(exactly = 0) { partnerServiceMock.findByLatitudeAndLongitude(any(), any()) }
-        verify(exactly = 0) { applicationCallMock.response.status(HttpStatusCode.OK) }
+        verify { applicationCallMock.request.queryParameters["latitude"] }
+        verify { applicationCallMock.request.queryParameters["longitude"] }
+        verify { partnerServiceMock.findByLatitudeAndLongitude(0.0, 11.22) }
+        verify { applicationCallMock.response.status(HttpStatusCode.OK) }
     }
 
     @Test
     fun `should thrown an exception when the query parameter longitude has been not informed on request`() {
-        every { applicationCallMock.request.queryParameters["latitude"] } returns "123.22"
-        every { applicationCallMock.request.queryParameters["longitude"] } returns null
+        val latitude = "22.22"
 
-        assertThrows<InvalidParameterException>(
-            message = "The query parameter longitude does not informed."
-        ) {
+        every { applicationCallMock.request.queryParameters["latitude"] } returns latitude
+        every { applicationCallMock.request.queryParameters["longitude"] } returns null
+        every { partnerServiceMock.findByLatitudeAndLongitude(22.22, 0.0) } returns partnerMock
+
+        assertDoesNotThrow {
             partnerController.findByLatitudeAndLongitude(applicationCallMock)
         }
 
-        verify(exactly = 0) { partnerServiceMock.findByLatitudeAndLongitude(any(), any()) }
-        verify(exactly = 0) { applicationCallMock.response.status(HttpStatusCode.OK) }
+        verify { applicationCallMock.request.queryParameters["latitude"] }
+        verify { applicationCallMock.request.queryParameters["longitude"] }
+        verify { partnerServiceMock.findByLatitudeAndLongitude(22.22, 0.0) }
+        verify { applicationCallMock.response.status(HttpStatusCode.OK) }
     }
 }

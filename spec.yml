@@ -1,0 +1,272 @@
+openapi: 3.0.0
+
+info:
+  title: Partner Service
+
+  description: |
+    This API provides information about the nearest partners that coverage a specif area.
+  version: 1.0.0
+
+  contact:
+    name: Lucas Schwenke Paixão
+
+tags:
+  - name: Partner
+    description: |
+      Endpoint to context of partner
+servers:
+  - url: http://localhost:{port}
+    description: local environment
+    variables:
+      port:
+        default: '8182'
+paths:
+  /partner:
+    post:
+      summary: Create a partner
+      description: |
+        Create a partner
+      tags:
+        - Partner
+
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PartnerRequest'
+
+      responses:
+        201:
+          description: Partner created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PartnerResponse'
+
+        400:
+          description: Invalid Request or partner already registered
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  - $ref: '#/components/schemas/PartnerAlreadyRegisteredException'
+                  - $ref: '#/components/schemas/InvalidRequestException'
+              examples:
+                PartnerAlreadyRegisteredException:
+                  summary: Partner already registered
+                  value:
+                    api_error: PARTNER_ALREADY_REGISTERED
+                    message: There is a partner with the follow document {document} already registered.
+                    details: {}
+                InvalidRequestException:
+                  summary: Invalid field value in request
+                  value:
+                    api_error: INVALID_REQUEST
+                    message: The follow fields are invalids
+                    details: {"trading_name": [must not be empty or null.]}
+
+    get:
+      summary: Find the nearest partner that coverage an especific area
+      tags:
+        - Partner
+      description: |
+        Find by latitude and longitude
+      parameters:
+        - in: query
+          name: latitude
+          schema:
+            type: number
+          description: The latitude that the partner coverage
+        - in: query
+          name: longitude
+          schema:
+            type: number
+          description: The longitude that the partner coverage
+
+      responses:
+        200:
+          description: Partner found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PartnerResponse'
+
+        404:
+          description: Partner not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PartnerNotFoundException'
+
+  /partner/{id}:
+    get:
+      summary: Find partner by id
+      description: |
+        Find by id
+      tags:
+        - Partner
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: string
+          required: true
+          description: ID of the partner to get
+
+      responses:
+        200:
+          description: Partner found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PartnerResponse'
+
+        404:
+          description: Partner not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PartnerNotFoundException'
+
+components:
+  schemas:
+    ##Requests
+    PartnerRequest:
+      type: object
+      properties:
+        trading_name:
+          type: string
+          description: partner's trading name
+          example: Adega Vila Mariana
+        owner_name:
+          type: string
+          description: partner's owner name
+          example: João Carlos
+        document:
+          type: string
+          description: partner's document (CNPJ)
+          example: 44.267.034/0001-12
+        coverage_area:
+          $ref: '#/components/schemas/MultiPolygon'
+        address:
+          $ref: '#/components/schemas/Point'
+
+    ##Responses
+    PartnerResponse:
+      type: object
+      properties:
+        id:
+          type: string
+          description: partner's id
+          example: 01EK7R0JMR380JM0G2206QAWV4
+        trading_name:
+          type: string
+          description: partner's trading name
+          example: Adega Vila Mariana
+        owner_name:
+          type: string
+          description: partner's owner name
+          example: João Carlos
+        document:
+          type: string
+          description: partner's document (CNPJ)
+          example: 44.267.034/0001-12
+        coverage_area:
+          $ref: '#/components/schemas/MultiPolygon'
+        address:
+          $ref: '#/components/schemas/Point'
+
+    #objects
+    Geometry:
+      type: object
+      description: GeoJSon geometry
+      required:
+        - type
+      externalDocs:
+        url: http://geojson.org/geojson-spec.html#geometry-objects
+      properties:
+        type:
+          type: string
+          enum:
+            - Point
+            - LineString
+            - Polygon
+            - MultiPoint
+            - MultiLineString
+            - MultiPolygon
+          description: the geometry type
+
+    Point3D:
+      type: array
+      description: Point in 3D space
+      externalDocs:
+        url: http://geojson.org/geojson-spec.html#id2
+      minItems: 2
+      maxItems: 3
+      items:
+        type: number
+
+    MultiPolygon:
+      type: object
+      description: GeoJSon geometry
+      externalDocs:
+        url: http://geojson.org/geojson-spec.html#id6
+      allOf:
+        - $ref: "#/components/schemas/Geometry"
+        - properties:
+            coordinates:
+              type: array
+              items:
+                type: array
+                items:
+                  type: array
+                  items:
+                    $ref: '#/components/schemas/Point3D'
+
+    Point:
+      type: object
+      description: GeoJSon geometry
+      externalDocs:
+        url: http://geojson.org/geojson-spec.html#id2
+      allOf:
+        - $ref: "#/components/schemas/Geometry"
+        - properties:
+            coordinates:
+              $ref: '#/components/schemas/Point3D'
+
+    #errors
+    PartnerAlreadyRegisteredException:
+      type: object
+      properties:
+        api_error:
+          type: string
+          example: PARTNER_ALREADY_REGISTERED
+        message:
+          type: string
+          example: There is a partner with the follow document {document} already registered.
+
+    PartnerNotFoundException:
+      type: object
+      properties:
+        api_error:
+          type: string
+          example: PARTNER_NOT_FOUND
+        message:
+          type: string
+          example: The partner with the id {id} not found.
+
+    InvalidRequestException:
+      type: object
+      properties:
+        api_error:
+          type: string
+          example: INVALID_REQUEST
+        message:
+          type: string
+          example: The follow fields are invalids
+        details:
+          type: array
+          items:
+            type: string
+            example: must not be empty or null.

@@ -56,11 +56,8 @@ class PartnerController(
     }
 
     fun findByLatitudeAndLongitude(call: ApplicationCall): PartnerResponse {
-        val latitude = call.request.queryParameters["latitude"]?.toDouble()
-            ?: throw InvalidParameterException("The query parameter latitude does not informed.")
-
-        val longitude = call.request.queryParameters["longitude"]?.toDouble()
-            ?: throw InvalidParameterException("The query parameter longitude does not informed.")
+        val latitude = call.request.queryParameters["latitude"]?.toDouble() ?: DEFAULT_VALUE
+        val longitude = call.request.queryParameters["longitude"]?.toDouble() ?: DEFAULT_VALUE
 
         return PartnerResponse(partnerService.findByLatitudeAndLongitude(latitude, longitude)).also {
             call.response.status(HttpStatusCode.OK)
@@ -72,5 +69,7 @@ class PartnerController(
 
     private fun getJsonString(any: Any): String = objectMapper.writeValueAsString(any)
 
-    companion object : LoggableClass()
+    companion object : LoggableClass() {
+        private const val DEFAULT_VALUE = 0.0
+    }
 }
