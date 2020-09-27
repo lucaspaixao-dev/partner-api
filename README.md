@@ -18,6 +18,7 @@ This API was develop with:
                                             ```
  - For test, execute the follow command on terminal: ```
                                         $ curl --location --request GET 'localhost:8182/health-check'
+                                        ```
                                         
 # Libraries
  - [deteKt](https://github.com/arturbosch/detekt) to code complexity
