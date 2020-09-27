@@ -1,17 +1,17 @@
 version: '3.7'
 
 services:
-#  simian:
-#    build: .
-#    restart: always
-#    container_name: partner-service
-#    ports:
-#      - 8182:8080
-#    working_dir: /app
-#    depends_on:
-#      - mongodb
-#    networks:
-#      - partner-network
+  partner:
+    build: .
+    restart: always
+    container_name: partner-service
+    ports:
+      - 8182:8080
+    working_dir: /app
+    depends_on:
+      - mongodb
+    networks:
+      - partner-network
 
   mongodb:
     image: mongo
