@@ -7,6 +7,7 @@ import com.github.lucasschwenke.partnerapi.application.modules.databaseModule
 import com.github.lucasschwenke.partnerapi.application.modules.repositoriesModules
 import com.github.lucasschwenke.partnerapi.application.modules.servicesModules
 import com.github.lucasschwenke.partnerapi.application.modules.validatorsModules
+import com.github.lucasschwenke.partnerapi.application.web.controllers.HealthCheckController
 import com.github.lucasschwenke.partnerapi.application.web.controllers.PartnerController
 import com.github.lucasschwenke.partnerapi.application.web.requests.PartnerRequest
 import com.github.lucasschwenke.partnerapi.domain.exceptions.ApiException
@@ -79,8 +80,15 @@ fun Application.module(dbTestModule: Module? = null) {
     }
 
     val partnerController: PartnerController by inject()
+    val healthCheckController: HealthCheckController by inject()
 
     routing {
+        route("/health-check") {
+            get {
+                call.respond(healthCheckController.health(this.call))
+            }
+        }
+
         route("/partner") {
             get {
                 call.respond(partnerController.findByLatitudeAndLongitude(this.call))

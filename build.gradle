@@ -114,6 +114,7 @@ def ignorePackagesInJacocoReport = { classDirectories ->
                         'com/github/lucasschwenke/partnerapi/application/modules/**',
                         'com/github/lucasschwenke/partnerapi/application/web/extensions/PartnerRequestExtension**',
                         'com/github/lucasschwenke/partnerapi/application/web/requests/**',
+                        'com/github/lucasschwenke/partnerapi/application/web/controllers/HealthCheckController**',
                         'com/github/lucasschwenke/partnerapi/application/web/responses/**',
                         'com/github/lucasschwenke/partnerapi/application/web/validations/**',
                         'com/github/lucasschwenke/partnerapi/domain/exception/**',
