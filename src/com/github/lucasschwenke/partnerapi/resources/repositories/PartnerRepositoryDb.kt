@@ -27,7 +27,6 @@ class PartnerRepositoryDb(
         val db = client.getDatabase(database)
         collection = db.getCollection("partner")
         collection.createIndex(Indexes.geo2dsphere("address"))
-        collection.createIndex(Indexes.geo2dsphere("coverage_area"))
 
         logger.debug("Connect in database $database on collection $collection")
     }
